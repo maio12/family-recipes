@@ -29,6 +29,7 @@ export const AddRecipe = () => {
   const [addRecipe] = useMutation(addRecipeMutation);
   const {ingredients} = useContext(GlobalContext);
   const { cleanIngredients } = useContext(GlobalContext);
+  const { closeDialog } = useContext(GlobalContext);
 
   console.log(data)
   const [name, setName] = useState('');
@@ -57,40 +58,41 @@ export const AddRecipe = () => {
     addRecipe({ variables: { name: name, genre: genre, authorId: author, ingredients: ingredients, preparation: preparation, prepTime: prepTime, cookTime: cookTime, ingredientsFor: ingredientsFor, veggie: veggie }, refetchQueries: [{ query: getRecipesQuery }] });
     console.log(ingredients, prepTime, cookTime, ingredientsFor)
     cleanFieldsAndIngredientsState();
+    closeDialog();
   }
 
   return (
-    <form className="add-book" action="" onSubmit={submitForm}>
-      <div className="field__book--name">
+    <form className="add-recipe" action="" onSubmit={submitForm}>
+      <div className="field__recipe--name">
         <label className="form__label" htmlFor="">Recipe name</label>
         <input className="form__input" type="text" onChange={(e) => setName(e.target.value)} />
       </div>
-      <div className="field__book--genre">
+      <div className="field__recipe--genre">
         <label className="form__label" htmlFor="">Genre</label>
         <input className="form__input" type="text" onChange={(e) => setGenre(e.target.value)}/>
       </div>
       
-      <div className="field__book--genre">
+      <div className="field__recipe--genre">
         <label className="form__label" htmlFor="">Preparation</label>
         <input className="form__input" type="text" onChange={(e) => setPreparation(e.target.value)}/>
       </div>
-      <div className="field__book--genre">
+      <div className="field__recipe--genre">
         <label className="form__label" htmlFor="">Prep Time</label>
         <input className="form__input" type="text" onChange={(e) => setPrepTime(parseInt(e.target.value, 10))}/>
       </div>
-      <div className="field__book--genre">
+      <div className="field__recipe--genre">
         <label className="form__label" htmlFor="">Cook Time</label>
         <input className="form__input" type="text" onChange={(e) => setCookTime(parseInt(e.target.value, 10))}/>
       </div>
-      <div className="field__book--genre">
+      <div className="field__recipe--genre">
         <label className="form__label" htmlFor="">Ingredients For</label>
         <input className="form__input" type="text" onChange={(e) => setIngredientsFor(parseInt(e.target.value, 10))}/>
       </div>
-      <div className="field__book--genre">
+      <div className="field__recipe--genre">
         <label className="form__label" htmlFor="">Veggie?</label>
         <input className="form__input" type="text" onChange={(e) => setVeggie(e.target.value)}/>
       </div>
-      <div className="field__book--author">
+      <div className="field__recipe--author">
         <label className="form__label" htmlFor="">Author:</label>
         <select className="form__select" name="" id="" onChange={(e) => setAuthor(e.target.value)}>
           <option value="">Select author</option>
