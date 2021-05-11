@@ -32,7 +32,7 @@ export default function AddIngredient() {
         <label className="form__label" htmlFor="">Ingredient Qty</label>
         <input className="form__input" type="number" value={ingredientQty} onChange={(e) => setIngredientQty(parseInt(e.target.value, 10))}/>
       </div>
-      <button onClick={submitForm} className="btn">Add ingredient</button>
+      <button onClick={submitForm} className="add-ingredient__button">Add ingredient</button>
     </div>
   )
 }

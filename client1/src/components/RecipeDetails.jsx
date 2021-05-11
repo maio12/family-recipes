@@ -2,6 +2,7 @@ import React, {useContext} from 'react'
 import {useQuery} from '@apollo/client';
 import { getRecipeQuery } from '../queries/queries';
 import { GlobalContext } from '../context/GlobalState.js';
+import {useTransition, animated} from 'react-spring';
 
 const displayRecipe = (l, d, e) => {
   let recipe;
@@ -32,16 +33,22 @@ const displayRecipe = (l, d, e) => {
 }
 
 export const RecipeDetails = ({ recipeId }) => {
-  const {recipeListOpen} = useContext(GlobalContext);
+  const {recipeListOpen, closeRecipeList} = useContext(GlobalContext);
+  const transition = useTransition(recipeListOpen, {
+    from: { x: 400, y: 0, opacity: 0}, 
+    enter: {x: 0, y: 0, opacity: 1},
+    leave: { x: -400, y: 0, opacity: 0},
+  })
   const userecipeId = recipeId ? recipeId : null
   const { loading, data, error } = useQuery(getRecipeQuery, { variables: { id: userecipeId} } );
     console.log(data)
   
   return (
-    <div>
-      <div className={recipeListOpen && "recipe__details--open"}>
-        {displayRecipe(loading, data, error)}
-      </div>
+    <div className="recipe__details-container">
+    {transition((style, item) => item && 
+      <animated.div style={style} onClick={closeRecipeList} className="recipe__details--open">
+        {recipeListOpen && displayRecipe(loading, data, error)}
+      </animated.div>)}
     </div>
   )
 }

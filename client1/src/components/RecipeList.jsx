@@ -37,7 +37,7 @@ export const RecipeList = () => {
   console.log(selected, 'SELECTED')
   console.log(recipeListOpen)
   return (
-    <div>
+    <div className="container">
       <ul className="recipe__list">
         {displayRecipes(loading, data, error)}
       </ul>
