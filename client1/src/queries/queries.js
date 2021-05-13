@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-export const getAuthorsQuery = gql`
+export const getAuthorsQuery = gql `
   query getAuthors {
     authors {
       name
@@ -18,7 +18,7 @@ export const getAuthorsQuery = gql`
   }
 `
 
-export const getRecipesQuery = gql`
+export const getRecipesQuery = gql `
   query getRecipes {
     recipes {
       name
@@ -39,7 +39,7 @@ export const getRecipesQuery = gql`
   }
 `
 
-export const addRecipeMutation = gql`
+export const addRecipeMutation = gql `
   mutation($name: String!, $genre: String!, $ingredients: [Ingredient], $authorId: ID!, $preparation: String!, $prepTime: Int!, $cookTime: Int!, $ingredientsFor: Int!, $veggie: Boolean ) {
     addRecipe(name: $name, genre: $genre, authorId: $authorId, ingredients: $ingredients, preparation: $preparation, prepTime: $prepTime, cookTime: $cookTime, ingredientsFor: $ingredientsFor, veggie: $veggie) {
       name
@@ -58,7 +58,7 @@ export const addRecipeMutation = gql`
   }
 `;
 
-export const getRecipeQuery = gql`
+export const getRecipeQuery = gql `
   query getRecipe($id: ID!) {
     recipe(id: $id) {
       name
@@ -85,3 +85,30 @@ export const getRecipeQuery = gql`
     }
   }
 `;
+
+// export const getRecipeByNameQuery = gql `
+//   query getRecipe($id: ID!) {
+//     recipe(id: $id) {
+//       id
+//       genre
+//       ingredients {
+//         ingredientQty
+//         ingredientName
+//       }
+//       preparation
+//       prepTime
+//       cookTime
+//       ingredientsFor
+//       veggie
+//       author {
+//         id
+//         name
+//         recipes {
+//           name
+//           id
+//           type
+//         }
+//       }
+//     }
+//   }
+// `;

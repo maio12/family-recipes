@@ -20,6 +20,28 @@ button {
     }
 }
 
+.navbar {
+    margin: -20px -8px;
+    overflow: hidden;
+    display: flex;
+    background-color: white;
+    position: sticky;
+    top: 0;
+    box-shadow: 0 2px 2px -2px rgba(0, 0, 0, .2);
+    &__group {
+        display: flex;
+        align-items: center;
+        list-style: none;
+        margin-left: auto;
+    }
+    &__item {
+        margin: 0 20px;
+    }
+    & h1 {
+        margin-left: 20px;
+    }
+}
+
 .recipe {
     &__list {
         padding: 0;
@@ -116,6 +138,7 @@ button {
 .container {
     width: 100%;
     display: flex;
+    padding-top: 50px;
 }
 
 code {
@@ -168,4 +191,14 @@ code {
             left: 43%;
         }
     }
+}
+
+.visually-hidden {
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
 }

@@ -1,6 +1,7 @@
 import './index.scss';
 import {RecipeList} from './components/RecipeList';
 import {AddRecipe} from './components/AddRecipe';
+import {Navbar} from './components/Navbar.jsx';
 import {AddNewRecipeButton} from './components/AddNewRecipeButton.jsx';
 import {ApolloClient, InMemoryCache, ApolloProvider} from '@apollo/client';
 //import { ApolloProvider } from '@apollo/client'; //to wrap the aplication and inject whichever data we receive from server
@@ -18,7 +19,7 @@ function App() {
     <ApolloProvider client={client}>
       <GlobalProvider >
         <div className="main">
-          <h1>Family recipes</h1>
+          <Navbar />
           <RecipeList />
           <AddNewRecipeButton />
         </div>

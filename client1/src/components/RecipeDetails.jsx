@@ -1,6 +1,6 @@
 import React, {useContext} from 'react'
 import {useQuery} from '@apollo/client';
-import { getRecipeQuery } from '../queries/queries';
+import { getRecipeQuery, getRecipeByNameQuery } from '../queries/queries';
 import { GlobalContext } from '../context/GlobalState.js';
 import {useTransition, animated} from 'react-spring';
 
@@ -41,7 +41,8 @@ export const RecipeDetails = ({ recipeId }) => {
   })
   const userecipeId = recipeId ? recipeId : null
   const { loading, data, error } = useQuery(getRecipeQuery, { variables: { id: userecipeId} } );
-    console.log(data)
+  //const { loading, data, error } = useQuery(getRecipeByNameQuery, { variables: { name: 'Lasagne'} })
+  console.log(data)
   
   return (
     <div className="recipe__details-container">

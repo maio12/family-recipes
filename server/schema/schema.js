@@ -17,22 +17,22 @@ const {
 
 const RecipeType = new GraphQLObjectType({
     name: 'Recipe',
-    fields: ( ) => ({
+    fields: () => ({
         id: { type: GraphQLID },
         name: { type: GraphQLString },
         genre: { type: GraphQLString },
-        prepTime: {type: GraphQLInt},
-        cookTime: {type: GraphQLInt},
-        ingredientsFor: {type: GraphQLInt},
-        preparation: {type: GraphQLString},
-        type: {type: GraphQLString},
-        veggie: {type: graphql.GraphQLBoolean},
+        prepTime: { type: GraphQLInt },
+        cookTime: { type: GraphQLInt },
+        ingredientsFor: { type: GraphQLInt },
+        preparation: { type: GraphQLString },
+        type: { type: GraphQLString },
+        veggie: { type: graphql.GraphQLBoolean },
         ingredients: {
             type: new GraphQLList(IngredientTypeOut),
-            },
+        },
         author: {
             type: AuthorType,
-            resolve(parent, args){
+            resolve(parent, args) {
                 return Author.findById(parent.authorId);
             }
         }
@@ -42,29 +42,29 @@ const RecipeType = new GraphQLObjectType({
 const IngredientTypeOut = new GraphQLObjectType({
     name: 'IngredientOut',
     fields: () => ({
-      id: {type: GraphQLInt},
-      ingredientName: {type: GraphQLString},
-      ingredientQty: {type: GraphQLInt},
+        id: { type: GraphQLInt },
+        ingredientName: { type: GraphQLString },
+        ingredientQty: { type: GraphQLInt },
     })
-  })
+})
 
 const IngredientType = new GraphQLInputObjectType({
     name: 'Ingredient',
     fields: () => ({
-      id: {type: GraphQLInt},
-      ingredientName: {type: GraphQLString},
-      ingredientQty: {type: GraphQLInt},
+        id: { type: GraphQLInt },
+        ingredientName: { type: GraphQLString },
+        ingredientQty: { type: GraphQLInt },
     })
-  })
+})
 
 const AuthorType = new GraphQLObjectType({
     name: 'Author',
-    fields: ( ) => ({
+    fields: () => ({
         id: { type: GraphQLID },
         name: { type: GraphQLString },
         recipes: {
             type: new GraphQLList(RecipeType),
-            resolve(parent, args){
+            resolve(parent, args) {
                 return Recipe.find({ authorId: parent.id });
             }
         }
@@ -85,14 +85,14 @@ const RootQuery = new GraphQLObjectType({
         recipe: {
             type: RecipeType,
             args: { id: { type: GraphQLID } },
-            resolve(parent, args){
+            resolve(parent, args) {
                 return Recipe.findById(args.id);
             }
         },
         author: {
             type: AuthorType,
             args: { id: { type: GraphQLID } },
-            resolve(parent, args){
+            resolve(parent, args) {
                 return Author.findById(args.id);
             }
         },
@@ -105,19 +105,27 @@ const RootQuery = new GraphQLObjectType({
         },
         recipes: {
             type: new GraphQLList(RecipeType),
-            resolve(parent, args){
+            resolve(parent, args) {
                 return Recipe.find({});
+            }
+        },
+        recipeByName: {
+            type: new GraphQLList(RecipeType),
+            args: { name: { type: GraphQLString } },
+            async resolve(parent, args) {
+                const recipes = await Recipe.find({});
+                return recipes.filter((p) => p.name.toLowerCase().includes(args.name.toLowerCase()));
             }
         },
         authors: {
             type: new GraphQLList(AuthorType),
-            resolve(parent, args){
+            resolve(parent, args) {
                 return Author.find({});
             }
         },
         users: {
             type: new GraphQLList(UserType),
-            resolve(parent, args){
+            resolve(parent, args) {
                 return User.find({});
             }
         }
@@ -130,28 +138,27 @@ const Mutation = new GraphQLObjectType({
         loginUser: {
             type: GraphQLBoolean,
             args: {
-              email: { type: new GraphQLNonNull(GraphQLString) },
+                email: { type: new GraphQLNonNull(GraphQLString) },
             },
             async resolve(parent, args, request) {
-              const user = await User.find({ email: args.email });
-              if (!user) {
-                throw new Error(
-                  `Could not find account associated with email: ${args.email}`
-                );
-              } 
-              else {
-                request.login(user, error => (error ? error : user));
-                return true;
-              }
+                const user = await User.find({ email: args.email });
+                if (!user) {
+                    throw new Error(
+                        `Could not find account associated with email: ${args.email}`
+                    );
+                } else {
+                    request.login(user, error => (error ? error : user));
+                    return true;
+                }
             }
-          },
+        },
         addAuthor: {
             type: AuthorType,
             args: {
                 name: { type: GraphQLString },
                 age: { type: GraphQLInt }
             },
-            resolve(parent, args){
+            resolve(parent, args) {
                 let author = new Author({
                     name: args.name,
                     age: args.age
@@ -165,14 +172,14 @@ const Mutation = new GraphQLObjectType({
                 name: { type: new GraphQLNonNull(GraphQLString) },
                 genre: { type: new GraphQLNonNull(GraphQLString) },
                 authorId: { type: new GraphQLNonNull(GraphQLID) },
-                prepTime: {type: new GraphQLNonNull(GraphQLInt)},
-                cookTime: {type: new GraphQLNonNull(GraphQLInt)},
-                ingredientsFor: {type: new GraphQLNonNull(GraphQLInt)},
-                preparation: {type: new GraphQLNonNull(GraphQLString)},
-                veggie: {type: graphql.GraphQLBoolean},
-                ingredients: {type: new GraphQLList(IngredientType)}
+                prepTime: { type: new GraphQLNonNull(GraphQLInt) },
+                cookTime: { type: new GraphQLNonNull(GraphQLInt) },
+                ingredientsFor: { type: new GraphQLNonNull(GraphQLInt) },
+                preparation: { type: new GraphQLNonNull(GraphQLString) },
+                veggie: { type: graphql.GraphQLBoolean },
+                ingredients: { type: new GraphQLList(IngredientType) }
             },
-            resolve(parent, args){
+            resolve(parent, args) {
                 let recipe = new Recipe({
                     name: args.name,
                     genre: args.genre,

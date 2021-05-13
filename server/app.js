@@ -13,23 +13,23 @@ const app = express();
 //allow cross origin requests
 app.use(cors());
 
-const options = { 
-  useUnifiedTopology: true,
-  useNewUrlParser: true
+const options = {
+    useUnifiedTopology: true,
+    useNewUrlParser: true
 }
 
 //connect to mlab database
 mongoose.connect(`mongodb+srv://amaiocchi:${process.env.MONGOOSE_PW}@cluster0.zoh8e.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`, options)
-.then(() => {
-  log.warn('🗄️connected to DB');
-})
-.catch((err) => {
-  log.warn(`MongoDB connection unsuccessful: ${err}`)
-})
+    .then(() => {
+        log.warn('🗄️connected to DB');
+    })
+    .catch((err) => {
+        log.warn(`MongoDB connection unsuccessful: ${err}`)
+    })
 
 app.use('/graphql', graphqlHTTP({
-  schema,
-  //graphiql: true,
+    schema,
+    //graphiql: true,
 }))
 
 app.get('/', expressPlayground({ endpoint: '/graphql' }))
