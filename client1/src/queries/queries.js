@@ -1,49 +1,72 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
-export const getAuthorsQuery = gql `
+export const getAuthorsQuery = gql`
   query getAuthors {
     authors {
-      name
-      id
-      recipes {
+      authors {
         name
-        genre
-        veggie
-        ingredients {
-          ingredientName
-          ingredientQty
+        _id
+        recipes {
+          name
+          genre
+          veggie
+          ingredients {
+            ingredientName
+            ingredientQty
+          }
         }
       }
     }
   }
-`
+`;
 
-export const getRecipesQuery = gql `
+export const getRecipesQuery = gql`
   query getRecipes {
     recipes {
-      name
-      genre
-      prepTime
-      cookTime
-      type
-      veggie
-      author {
+      recipes {
         name
-        id
+        genre
+        prepTime
+        cookTime
+        veggie
+        authorId
+        author {
+          name
+        }
+        ingredients {
+          ingredientName
+        }
+        _id
       }
-      ingredients {
-        ingredientName
-      }
-      id
     }
   }
-`
+`;
 
-export const addRecipeMutation = gql `
-  mutation($name: String!, $genre: String!, $ingredients: [Ingredient], $authorId: ID!, $preparation: String!, $prepTime: Int!, $cookTime: Int!, $ingredientsFor: Int!, $veggie: Boolean ) {
-    addRecipe(name: $name, genre: $genre, authorId: $authorId, ingredients: $ingredients, preparation: $preparation, prepTime: $prepTime, cookTime: $cookTime, ingredientsFor: $ingredientsFor, veggie: $veggie) {
+export const addRecipeMutation = gql`
+  mutation (
+    $name: String!
+    $genre: String!
+    $ingredients: [IngredientIn!]!
+    $authorId: ID!
+    $preparation: String!
+    $prepTime: Int!
+    $cookTime: Int!
+    $ingredientsFor: Int!
+    $veggie: Boolean
+  ) {
+    addRecipe(
+      name: $name
+      genre: $genre
+      authorId: $authorId
+      ingredients: $ingredients
+      preparation: $preparation
+      prepTime: $prepTime
+      cookTime: $cookTime
+      ingredientsFor: $ingredientsFor
+      veggie: $veggie
+    ) {
       name
-      id
+      _id
       genre
       ingredients {
         ingredientQty
@@ -58,11 +81,11 @@ export const addRecipeMutation = gql `
   }
 `;
 
-export const getRecipeQuery = gql `
+export const getRecipeQuery = gql`
   query getRecipe($id: ID!) {
     recipe(id: $id) {
       name
-      id
+      _id
       genre
       ingredients {
         ingredientQty
@@ -74,14 +97,32 @@ export const getRecipeQuery = gql `
       ingredientsFor
       veggie
       author {
-        id
+        _id
         name
         recipes {
           name
-          id
-          type
+          _id
         }
       }
+    }
+  }
+`;
+
+export const loginMutation = gql`
+  mutation ($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
+      token
+      userId
+    }
+  }
+`;
+
+export const signupMutation = gql`
+  mutation ($userInput: Object) {
+    createUser(name: $name, email: $email, password: $password) {
+      name
+      email
+      password
     }
   }
 `;

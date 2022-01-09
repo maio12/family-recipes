@@ -1,12 +1,17 @@
-import React, { createContext, useReducer } from 'react';
-import AppReducer from './AppReducer';
+import React, { createContext, useReducer, useState } from "react";
+import { AUTH_TOKEN } from "../constants/constants";
+import AppReducer from "./AppReducer";
 
 //initial state
 const initialState = {
   ingredients: [],
   modalOpen: false,
   recipeListOpen: false,
-}
+  isAuthenticated: false,
+  modalLoginOpen: false,
+  modalSignupOpen: false,
+  login: () => {},
+};
 
 //Create global context:
 export const GlobalContext = createContext(initialState);
@@ -14,65 +19,107 @@ export const GlobalContext = createContext(initialState);
 //Provider component:
 export const GlobalProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AppReducer, initialState);
+  const [isAuthenticated, setAuthenticated] = useState(() => {
+    const token = localStorage.getItem(AUTH_TOKEN);
+    return token !== null;
+  });
 
-//Actions
-const deleteIngredient = (id) => {
-  dispatch({
-    type: 'DELETE_INGREDIENT',
-    payload: id
-  })
-}
+  //Actions
+  const deleteIngredient = (id) => {
+    dispatch({
+      type: "DELETE_INGREDIENT",
+      payload: id,
+    });
+  };
 
-const cleanIngredients = () => {
-  dispatch({
-    type: 'CLEAN_INGREDIENTS'
-  })
-}
+  const cleanIngredients = () => {
+    dispatch({
+      type: "CLEAN_INGREDIENTS",
+    });
+  };
 
-const addIngredient = (ingredient) => {
-  dispatch({
-    type: 'ADD_INGREDIENT',
-    payload: ingredient
-  })
-}
+  const addIngredient = (ingredient) => {
+    dispatch({
+      type: "ADD_INGREDIENT",
+      payload: ingredient,
+    });
+  };
 
-const closeDialog = () => {
-  dispatch({
-    type: 'CLOSE_DIALOG',
-  })
-}
+  const closeDialog = () => {
+    dispatch({
+      type: "CLOSE_DIALOG",
+    });
+  };
 
-const openDialog = () => {
-  dispatch({
-    type: 'OPEN_DIALOG',
-  })
-}
+  const openDialog = () => {
+    dispatch({
+      type: "OPEN_DIALOG",
+    });
+  };
 
-const openRecipeList = () => {
-  dispatch({
-    type: 'OPEN_RECIPE_LIST',
-  })
-}
+  const openLoginDialog = () => {
+    dispatch({
+      type: "OPEN_LOGIN_DIALOG",
+    });
+  };
 
-const closeRecipeList = () => {
-  dispatch({
-    type: 'CLOSE_RECIPE_LIST',
-  })
-}
+  const closeLoginSignupDialog = () => {
+    dispatch({
+      type: "CLOSE_LOGIN_SIGNUP_DIALOG",
+    });
+  };
 
-  return (<GlobalContext.Provider value={{
-    ingredients: state.ingredients,
-    modalOpen: state.modalOpen,
-    recipeListOpen: state.recipeListOpen,
-    deleteIngredient,
-    addIngredient,
-    cleanIngredients,
-    closeDialog,
-    openDialog,
-    openRecipeList,
-    closeRecipeList,
-  }}>
-    {children}
-  </GlobalContext.Provider>)
-}
+  const openSignupDialog = () => {
+    dispatch({
+      type: "OPEN_SIGNUP_DIALOG",
+    });
+  };
 
+  const openRecipeList = () => {
+    dispatch({
+      type: "OPEN_RECIPE_LIST",
+    });
+  };
+
+  const closeRecipeList = () => {
+    dispatch({
+      type: "CLOSE_RECIPE_LIST",
+    });
+  };
+
+  const loginProva = () => {
+    setAuthenticated(true);
+  };
+
+  const logoutProva = () => {
+    setAuthenticated(false);
+  };
+
+  return (
+    <GlobalContext.Provider
+      value={{
+        ingredients: state.ingredients,
+        modalOpen: state.modalOpen,
+        recipeListOpen: state.recipeListOpen,
+        token: state.token,
+        modalLoginOpen: state.modalLoginOpen,
+        modalSignupOpen: state.modalSignupOpen,
+        isAuthenticated,
+        deleteIngredient,
+        addIngredient,
+        cleanIngredients,
+        closeDialog,
+        openDialog,
+        openRecipeList,
+        closeRecipeList,
+        loginProva,
+        logoutProva,
+        openLoginDialog,
+        openSignupDialog,
+        closeLoginSignupDialog,
+      }}
+    >
+      {children}
+    </GlobalContext.Provider>
+  );
+};
