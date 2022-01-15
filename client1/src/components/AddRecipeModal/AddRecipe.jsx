@@ -1,59 +1,66 @@
-import React, { useState, useContext } from "react";
+import React, { useContext, useReducer, useCallback } from "react";
 import { GlobalContext } from "../../context/GlobalState";
 import AddIngredient from "./AddIngredient";
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 
-import {
-  getAuthorsQuery,
-  addRecipeMutation,
-  getRecipesQuery,
-} from "../../queries/queries";
+import { addRecipeMutation, getRecipesQuery } from "../../queries/queries";
 
-const displayAuthors = (l, d, e) => {
-  let authors;
-  if (d) {
-    authors = d.authors.authors;
-    console.log(authors, "AUTHORS---------");
+import { CustomInput } from "../UI/Input";
+import { CustomSelect } from "../UI/Select";
+
+const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
+
+const formReducer = (state, action) => {
+  if (action.type === FORM_INPUT_UPDATE) {
+    const updatedValues = {
+      ...state.inputValues,
+      [action.input]: action.value,
+    };
+    const updatedValidities = {
+      ...state.inputValidities,
+      [action.input]: action.isValid,
+    };
+    let updatedFormIsValid = true;
+    for (const key in updatedValidities) {
+      updatedFormIsValid = updatedFormIsValid && updatedValidities[key];
+    }
+    return {
+      formIsValid: updatedFormIsValid,
+      inputValidities: updatedValidities,
+      inputValues: updatedValues,
+    };
   }
-  if (e) {
-    console.log(`error in AddRecipe ${e}`);
-    return;
-  }
-  return l ? (
-    <option disabled>Loading Authors...</option>
-  ) : (
-    authors.map((author) => (
-      <option key={author._id} value={author._id}>
-        {author.name}
-      </option>
-    ))
-  );
+  return state;
 };
 
 export const AddRecipe = () => {
-  const { loading, data, error } = useQuery(getAuthorsQuery);
   const [addRecipe] = useMutation(addRecipeMutation);
-  const { ingredients } = useContext(GlobalContext);
-  const { cleanIngredients } = useContext(GlobalContext);
-  const { closeDialog } = useContext(GlobalContext);
-  const [name, setName] = useState("");
-  const [genre, setGenre] = useState("");
-  const [author, setAuthor] = useState("");
-  const [preparation, setPreparation] = useState("");
-  const [prepTime, setPrepTime] = useState(0);
-  const [cookTime, setCookTime] = useState(0);
-  const [ingredientsFor, setIngredientsFor] = useState(0);
-  const [veggie, setVeggie] = useState(false);
+  const { ingredients, cleanIngredients, closeDialog } =
+    useContext(GlobalContext);
+
+  const [formState, dispatchFormState] = useReducer(formReducer, {
+    inputValues: {
+      name: "",
+      genre: "",
+      preparation: "",
+      prepTime: 0,
+      cookTime: 0,
+      ingredientsFor: 0,
+      veggie: false,
+    },
+    inputValidities: {
+      name: false,
+      genre: false,
+      preparation: false,
+      prepTime: false,
+      cookTime: false,
+      ingredientsFor: false,
+      veggie: false,
+    },
+    formIsValid: false,
+  });
 
   const cleanFieldsAndIngredientsState = () => {
-    setName("");
-    setGenre("");
-    setAuthor("");
-    setPreparation("");
-    setPrepTime(0);
-    setCookTime(0);
-    setIngredientsFor(0);
-    setVeggie(false);
     cleanIngredients();
   };
 
@@ -61,112 +68,155 @@ export const AddRecipe = () => {
     e.preventDefault();
     addRecipe({
       variables: {
-        name: name,
-        genre: genre,
-        authorId: author,
+        name: formState.inputValues.name,
+        genre: formState.inputValues.genre,
         ingredients: ingredients,
-        preparation: preparation,
-        prepTime: prepTime,
-        cookTime: cookTime,
-        ingredientsFor: ingredientsFor,
-        veggie: veggie,
+        preparation: formState.inputValues.preparation,
+        prepTime: Number(formState.inputValues.prepTime),
+        cookTime: Number(formState.inputValues.cookTime),
+        ingredientsFor: Number(formState.inputValues.ingredientsFor),
+        veggie: formState.inputValues.veggie === "true" ? true : false,
       },
-      refetchQueries: [{ query: getRecipesQuery }],
+      awaitRefetchQueries: true,
+      refetchQueries: () => [getRecipesQuery, "getRecipes"],
     });
-    console.log(ingredients, prepTime, cookTime, ingredientsFor);
+
     cleanFieldsAndIngredientsState();
     closeDialog();
   };
 
+  const inputChangeHandler = useCallback(
+    (inputIdentifier, inputValue, inputValidity) => {
+      dispatchFormState({
+        type: FORM_INPUT_UPDATE,
+        value: inputValue,
+        isValid: inputValidity,
+        input: inputIdentifier,
+      });
+    },
+    [dispatchFormState]
+  );
+
+  const selectChangeHandler = useCallback(
+    (selectIdentifier, selectValue, inputValidity) => {
+      dispatchFormState({
+        type: FORM_INPUT_UPDATE,
+        value: selectValue,
+        isValid: inputValidity,
+        input: selectIdentifier,
+      });
+    },
+    [dispatchFormState]
+  );
+
+  const veggieSelectOptions = [
+    { value: "false", text: "False", id: 1 },
+    { value: "true", text: "True", id: 2 },
+  ];
+
+  const genreSelectOptions = [
+    { value: "primi", text: "Primi", id: 1 },
+    { value: "secondi", text: "Secondi", id: 2 },
+    { value: "antipasti", text: "Antipasti", id: 3 },
+    { value: "contorni", text: "Contorni", id: 4 },
+    { value: "dolci", text: "Dolci", id: 5 },
+    { value: "lievitati", text: "Lievitati", id: 6 },
+    { value: "unici", text: "Piatti unici", id: 7 },
+  ];
+
   return (
     <form className="add-recipe" action="" onSubmit={submitForm}>
       <div className="field__recipe--name">
-        <label className="form__label" htmlFor="">
-          Recipe name
-        </label>
-        <input
-          className="form__input"
-          type="text"
-          onChange={(e) => setName(e.target.value)}
+        <CustomInput
+          id="name"
+          label="Recipe name"
+          errorText="Please enter a recipe name"
+          onInputChange={inputChangeHandler}
+          initialValue={""}
+          initiallyValid={false}
+          required
+          type={"text"}
         />
       </div>
       <div className="field__recipe--genre">
-        <label className="form__label" htmlFor="">
-          Genre
-        </label>
-        <input
-          className="form__input"
-          type="text"
-          onChange={(e) => setGenre(e.target.value)}
+        {/* <CustomInput
+          id="genre"
+          label="Genre"
+          errorText="Please select a genre"
+          onInputChange={inputChangeHandler}
+          initialValue={""}
+          initiallyValid={false}
+          required
+          type={"text"}
+        /> */}
+        <CustomSelect
+          id="genre"
+          onSelectChange={selectChangeHandler}
+          label="Genre"
+          initialValue={"Primi"}
+          selectOptions={genreSelectOptions}
+          required
+          initiallyValid={false}
+          errorText="Please select a genre"
         />
       </div>
 
       <div className="field__recipe--genre">
-        <label className="form__label" htmlFor="">
-          Preparation
-        </label>
-        <input
-          className="form__input"
-          type="text"
-          onChange={(e) => setPreparation(e.target.value)}
+        <CustomInput
+          id="preparation"
+          label="Preparation steps"
+          errorText="Please enter the preparation steps"
+          onInputChange={inputChangeHandler}
+          initialValue={""}
+          initiallyValid={false}
+          required
+          type={"text"}
         />
       </div>
       <div className="field__recipe--genre">
-        <label className="form__label" htmlFor="">
-          Prep Time
-        </label>
-        <input
-          className="form__input"
-          type="text"
-          onChange={(e) => setPrepTime(parseInt(e.target.value, 10))}
+        <CustomInput
+          id="prepTime"
+          label="Prep time"
+          errorText="Please enter the prep time"
+          onInputChange={inputChangeHandler}
+          initialValue={""}
+          initiallyValid={false}
+          min={0}
+          type={"number"}
         />
       </div>
       <div className="field__recipe--genre">
-        <label className="form__label" htmlFor="">
-          Cook Time
-        </label>
-        <input
-          className="form__input"
-          type="text"
-          onChange={(e) => setCookTime(parseInt(e.target.value, 10))}
+        <CustomInput
+          id="cookTime"
+          label="Cook time"
+          errorText="Please enter the cooking time"
+          onInputChange={inputChangeHandler}
+          initialValue={""}
+          initiallyValid={false}
+          min={0}
+          type={"number"}
         />
       </div>
       <div className="field__recipe--genre">
-        <label className="form__label" htmlFor="">
-          Ingredients For
-        </label>
-        <input
-          className="form__input"
-          type="text"
-          onChange={(e) => setIngredientsFor(parseInt(e.target.value, 10))}
+        <CustomInput
+          id="ingredientsFor"
+          label="Ingredients for"
+          errorText="Please enter how many people is this recipe for"
+          onInputChange={inputChangeHandler}
+          initialValue={""}
+          initiallyValid={false}
+          min={0}
+          type={"number"}
         />
       </div>
       <div className="field__recipe--genre">
-        <label className="form__label" htmlFor="">
-          Veggie?
-        </label>
-        <select
-          name=""
-          id=""
-          onChange={(e) => setVeggie(e.target.value === "true" ? true : false)}
-        >
-          <option value="true">True</option>
-          <option value="false">False</option>
-        </select>
-      </div>
-      <div className="field__recipe--author">
-        <label className="form__label" htmlFor="">
-          Author:
-        </label>
-        <select
-          className="form__select"
-          name=""
-          id=""
-          onChange={(e) => setAuthor(e.target.value)}
-        >
-          <option value="">Select author</option>
-          {displayAuthors(loading, data, error)}
-        </select>
+        <CustomSelect
+          id="veggie"
+          onSelectChange={selectChangeHandler}
+          label="Veggie?"
+          initialValue={"false"}
+          selectOptions={veggieSelectOptions}
+        />
       </div>
       <AddIngredient />
       <button className="form__button" type="submit">
@@ -175,5 +225,3 @@ export const AddRecipe = () => {
     </form>
   );
 };
-
-// export default graphql(addBookMutation)(graphql(getAuthorsQuery)(AddBook))

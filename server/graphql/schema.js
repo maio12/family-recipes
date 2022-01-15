@@ -12,7 +12,7 @@ module.exports = buildSchema(
         preparation: String!
         veggie: Boolean!
         ingredients: [IngredientOut!]!
-        author: Author!
+        author: User!
         authorId: ID!
     }
 
@@ -23,6 +23,11 @@ module.exports = buildSchema(
         password: String
         status: String!
         recipes: [Recipe!]!
+    }
+
+    type SignupUserData {
+        user: User!
+        authData: AuthData!
     }
 
     input UserInputData {
@@ -59,25 +64,35 @@ module.exports = buildSchema(
         totalRecipes: Int!
     }
 
-    type AuthorData {
-        authors: [Author!]!
-        totalAuthors: Int!
+    type RecipeByGenreData {
+        genre: String!
+        recipes: RecipeData!
+    }
+
+    type ProvaGenre {
+        recipesByGenre: [RecipeByGenreData!]!
+    }
+
+    type UsersData {
+        users: [User!]!
+        totalUsers: Int!
     }
 
     type RootQuery {
         recipe(id: ID!): Recipe!
         author(id: ID!): Author!
-        recipes: RecipeData!
-        recipeByName(name: String!): Recipe!
-        authors: AuthorData!
+        recipes(page: Int): RecipeData!
+        recipesByUser(userId: ID!): RecipeData!
+        users: UsersData!
         user: User!
+        recipesByGenre: ProvaGenre!
     }
 
     type RootMutation {
-        createUser(userInput: UserInputData): User!
+        createUser(userInput: UserInputData!): SignupUserData!
         login(email: String!, password: String!): AuthData!
-        addAuthor(name: String!, age: Int!): Author!
-        addRecipe(name: String!, genre: String!, authorId: ID!, prepTime: Int!, cookTime: Int!, ingredientsFor: Int!, preparation: String!, veggie: Boolean, ingredients: [IngredientIn!]!): Recipe!
+        addAuthor(name: String!): Author!
+        addRecipe(name: String!, genre: String!, prepTime: Int!, cookTime: Int!, ingredientsFor: Int!, preparation: String!, veggie: Boolean, ingredients: [IngredientIn!]!): Recipe!
     }
 
     schema {

@@ -4,9 +4,8 @@ import { GlobalContext } from "../../context/GlobalState";
 import { Modal } from "../Modal/Modal";
 import { Backdrop } from "../Backdrop/Backdrop";
 
-export const AddNewRecipeButton = () => {
+export const AddNewRecipeButton = ({ refetch }) => {
   const { modalOpen, openDialog, closeDialog } = useContext(GlobalContext);
-
   const handleModalClose = () => closeDialog();
 
   return (
@@ -14,7 +13,7 @@ export const AddNewRecipeButton = () => {
       <button className="add-recipe__button" onClick={() => openDialog()}>
         Add new recipe
       </button>
-      {modalOpen && <Modal />}
+      {modalOpen && <Modal {...{ refetch }} />}
       {modalOpen && <Backdrop onBackdropClick={handleModalClose} />}
     </div>
   );

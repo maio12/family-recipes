@@ -6,10 +6,13 @@ import AppReducer from "./AppReducer";
 const initialState = {
   ingredients: [],
   modalOpen: false,
-  recipeListOpen: false,
+  recipeListOpen: "",
   isAuthenticated: false,
   modalLoginOpen: false,
   modalSignupOpen: false,
+  recipePage: 1,
+  resettable: false,
+  recipes: [],
   login: () => {},
 };
 
@@ -75,15 +78,30 @@ export const GlobalProvider = ({ children }) => {
     });
   };
 
-  const openRecipeList = () => {
+  const openRecipeList = (recipeId) => {
     dispatch({
       type: "OPEN_RECIPE_LIST",
+      payload: recipeId,
     });
   };
 
   const closeRecipeList = () => {
     dispatch({
       type: "CLOSE_RECIPE_LIST",
+    });
+  };
+
+  const setRecipesPage = (pageNum) => {
+    dispatch({
+      type: "SET_RECIPES_PAGE",
+      payload: pageNum,
+    });
+  };
+
+  const setRecipes = (recipes, resettable = false) => {
+    dispatch({
+      type: "SET_RECIPES",
+      payload: { recipes, resettable },
     });
   };
 
@@ -105,6 +123,9 @@ export const GlobalProvider = ({ children }) => {
         modalLoginOpen: state.modalLoginOpen,
         modalSignupOpen: state.modalSignupOpen,
         isAuthenticated,
+        recipePage: state.recipePage,
+        resettable: state.resettable,
+        recipes: state.recipes,
         deleteIngredient,
         addIngredient,
         cleanIngredients,
@@ -117,6 +138,8 @@ export const GlobalProvider = ({ children }) => {
         openLoginDialog,
         openSignupDialog,
         closeLoginSignupDialog,
+        setRecipesPage,
+        setRecipes,
       }}
     >
       {children}

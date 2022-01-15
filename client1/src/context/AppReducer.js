@@ -46,12 +46,23 @@ const AppReducer = (state, action) => {
     case "OPEN_RECIPE_LIST":
       return {
         ...state,
-        recipeListOpen: true,
+        recipeListOpen: action.payload,
       };
     case "CLOSE_RECIPE_LIST":
       return {
         ...state,
-        recipeListOpen: false,
+        recipeListOpen: "",
+      };
+    case "SET_RECIPES_PAGE":
+      return {
+        ...state,
+        recipePage: action.payload,
+      };
+    case "SET_RECIPES":
+      return {
+        ...state,
+        recipes: action.payload.recipes,
+        resettable: action.payload.resettable,
       };
     default:
       return state;

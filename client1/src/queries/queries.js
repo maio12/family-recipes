@@ -1,35 +1,29 @@
 import { gql } from "@apollo/client";
 
-export const getAuthorsQuery = gql`
-  query getAuthors {
-    authors {
-      authors {
+export const getUsersQuery = gql`
+  query getUsers {
+    users {
+      users {
         name
         _id
         recipes {
           name
-          genre
-          veggie
-          ingredients {
-            ingredientName
-            ingredientQty
-          }
         }
       }
+      totalUsers
     }
   }
 `;
 
 export const getRecipesQuery = gql`
-  query getRecipes {
-    recipes {
+  query getRecipes($page: Int) {
+    recipes(page: $page) {
       recipes {
         name
         genre
         prepTime
         cookTime
         veggie
-        authorId
         author {
           name
         }
@@ -37,6 +31,34 @@ export const getRecipesQuery = gql`
           ingredientName
         }
         _id
+      }
+      totalRecipes
+    }
+  }
+`;
+
+export const recipesByGenreQuery = gql`
+  query recipesByGenre {
+    recipesByGenre {
+      recipesByGenre {
+        genre
+        recipes {
+          recipes {
+            name
+            genre
+            prepTime
+            cookTime
+            veggie
+            author {
+              name
+            }
+            ingredients {
+              ingredientName
+            }
+            _id
+          }
+          totalRecipes
+        }
       }
     }
   }
@@ -47,7 +69,7 @@ export const addRecipeMutation = gql`
     $name: String!
     $genre: String!
     $ingredients: [IngredientIn!]!
-    $authorId: ID!
+    # $authorId: ID!
     $preparation: String!
     $prepTime: Int!
     $cookTime: Int!
@@ -57,7 +79,7 @@ export const addRecipeMutation = gql`
     addRecipe(
       name: $name
       genre: $genre
-      authorId: $authorId
+      # authorId: $authorId
       ingredients: $ingredients
       preparation: $preparation
       prepTime: $prepTime
@@ -118,11 +140,17 @@ export const loginMutation = gql`
 `;
 
 export const signupMutation = gql`
-  mutation ($userInput: Object) {
-    createUser(name: $name, email: $email, password: $password) {
-      name
-      email
-      password
+  mutation ($userInput: UserInputData!) {
+    createUser(userInput: $userInput) {
+      user {
+        name
+        email
+        password
+      }
+      authData {
+        token
+        userId
+      }
     }
   }
 `;

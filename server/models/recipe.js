@@ -41,7 +41,7 @@ const recipeSchema = new Schema(
     },
     author: {
       type: Schema.Types.ObjectId,
-      ref: "Author",
+      ref: "User",
     },
   },
   { timestamps: true }

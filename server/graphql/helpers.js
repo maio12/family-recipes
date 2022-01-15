@@ -1,4 +1,4 @@
-const Author = require("../models/author");
+const User = require("../models/user");
 const Recipe = require("../models/recipe");
 
 const recipes = async (recipeIds) => {
@@ -6,23 +6,23 @@ const recipes = async (recipeIds) => {
     const recipes = await Recipe.find({ _id: { $in: recipeIds } });
     return recipes.map((recipe) => ({
       ...recipe._doc,
-      author: () => author(recipe._doc.author),
+      user: () => user(recipe._doc.author),
     }));
   } catch (err) {
     throw err;
   }
 };
 
-const author = async (authorId) => {
+const user = async (userId) => {
   try {
-    const author = await Author.findById(authorId);
+    const user = await User.findById(userId);
     return {
-      ...author._doc,
-      recipes: () => recipes(author._doc.recipes),
+      ...user._doc,
+      recipes: () => recipes(user._doc.recipes),
     };
   } catch (err) {
     throw err;
   }
 };
 
-module.exports = { recipes, author };
+module.exports = { recipes, user };

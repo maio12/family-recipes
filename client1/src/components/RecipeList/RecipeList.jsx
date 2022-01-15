@@ -1,51 +1,47 @@
 import React, { useState, useContext } from "react";
 
-import { RecipeDetails } from "../RecipeDetails/RecipeDetails";
-import { useQuery } from "@apollo/client";
-import { getRecipesQuery } from "../../queries/queries";
-import { GlobalContext } from "../../context/GlobalState.js";
+import { RecipeTile } from "../RecipeTile/RecipeTile";
+import { Paginator } from "../Paginator/Paginator";
+import { GlobalContext } from "../../context/GlobalState";
 
-export const RecipeList = () => {
-  const { loading, error, data } = useQuery(getRecipesQuery);
-  const { recipeListOpen, openRecipeList } = useContext(GlobalContext);
-  const [selected, setSelected] = useState("");
+export const RecipeList = (props) => {
+  const [recipesLoading, setRecipesLoading] = useState(false);
+  const [recipesPageX, setRecipesPageX] = useState(1);
+  const { setRecipesPage, closeRecipeList } = useContext(GlobalContext);
 
-  const showRecipeDetails = (recipe) => {
-    setSelected(recipe);
-    openRecipeList();
-  };
-
-  const displayRecipes = (l, d, e) => {
-    let recipes;
-    if (d) {
-      recipes = d.recipes.recipes;
-      console.log(recipes, "RECIPES FROM THE RECIPE LIST", d);
+  const loadRecipes = (direction) => {
+    if (direction) {
+      setRecipesLoading(true);
     }
-    if (e) {
-      console.log(`error in RecipeList ${e}`);
-      return;
+    let page = recipesPageX;
+    if (direction === "next") {
+      page++;
+      setRecipesPage(page);
+      setRecipesPageX(page);
     }
-    return l ? (
-      <div>Loading Recipes...</div>
-    ) : (
-      recipes.map((recipe) => (
-        <li
-          className="recipe__list--item"
-          key={recipe._id}
-          onClick={() => {
-            showRecipeDetails(recipe._id);
-          }}
-        >
-          {recipe.name}
-        </li>
-      ))
-    );
+    if (direction === "previous") {
+      page--;
+      setRecipesPage(page);
+      setRecipesPageX(page);
+    }
+    closeRecipeList();
   };
 
   return (
-    <div className="container">
-      <ul className="recipe__list">{displayRecipes(loading, data, error)}</ul>
-      {recipeListOpen && <RecipeDetails recipeId={selected} />}
-    </div>
+    <Paginator
+      onPrevious={() => loadRecipes("previous")}
+      onNext={() => loadRecipes("next")}
+      lastPage={Math.ceil(props.totalRecipes / 10)}
+      currentPage={recipesPageX}
+    >
+      <div className="container">
+        <ul className="recipe__list">
+          {props.recipes.map((r) => {
+            return <RecipeTile key={r._id} recipe={r} />;
+          })}
+        </ul>
+        {props.children}
+      </div>
+    </Paginator>
   );
 };

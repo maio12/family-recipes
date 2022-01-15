@@ -1,204 +1,224 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@600&display=swap");
 body,
 button {
-    background: #eee;
-    font-family: 'Nunito';
-    /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  background: #eee;
+  font-family: "Nunito";
+  /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif; */
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .main {
-    padding: 0;
-    box-sizing: border-box;
-    //width: 60%;
-    h1 {
-        color: #444;
-        text-align: center;
-    }
+  padding: 0;
+  box-sizing: border-box;
+  //width: 60%;
+  h1 {
+    color: #444;
+    text-align: center;
+  }
 }
 
 .navbar {
-    margin: -20px -8px;
-    overflow: hidden;
+  margin: -20px -8px;
+  //   overflow: hidden;
+  display: flex;
+  background-color: white;
+  position: sticky;
+  top: 0;
+  box-shadow: 0 2px 2px -2px rgba(0, 0, 0, 0.2);
+  &__group {
     display: flex;
-    background-color: white;
-    position: sticky;
-    top: 0;
-    box-shadow: 0 2px 2px -2px rgba(0, 0, 0, .2);
-    &__group {
-        display: flex;
-        align-items: center;
-        list-style: none;
-        margin-left: auto;
-    }
-    &__item {
-        margin: 0 20px;
-    }
-    & h1 {
-        margin-left: 20px;
-    }
+    align-items: center;
+    list-style: none;
+    margin-left: auto;
+  }
+  &__item {
+    margin: 0 20px;
+  }
+  & h1 {
+    margin-left: 20px;
+  }
 }
 
 .recipe {
-    &__list {
-        padding: 0;
-        &--item {
-            display: inline-block;
-            margin: 12px;
-            padding: 10px;
-            border-radius: 4px;
-            border: 1px solid #880E4F;
-            box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3);
-            cursor: pointer;
-            color: #880E4F;
-        }
+  &__list {
+    padding: 0;
+    &--item {
+      display: inline-block;
+      margin: 12px;
+      padding: 10px;
+      border-radius: 4px;
+      border: 1px solid #880e4f;
+      box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      color: #880e4f;
     }
+  }
 }
 
 .add-recipe {
-    background: white;
-    padding: 20px;
-    left: 0;
-    bottom: 0;
-    width: 400px;
+  background: white;
+  padding: 20px;
+  left: 0;
+  bottom: 0;
+  width: 400px;
 }
 
 .field {
-    &__recipe {
-        &--name,
-        &--genre,
-        &--author {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-gap: 10px;
-        }
+  &__recipe {
+    &--name,
+    &--genre,
+    &--author {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-gap: 10px;
     }
+  }
 }
 
 .form {
-    &__label {
-        text-align: right;
-        padding: 6px;
-    }
-    &__select,
-    &__input {
-        margin: 4px;
-        padding: 6px;
-        box-sizing: border-box;
-    }
-    &__button {
-        color: white;
-        font-size: 2em;
-        background: #ad1457;
-        padding: 0 10px;
-        border: 0;
-        border-radius: 50%;
-        cursor: pointer;
-        bottom: 10px;
-        left: 10px;
-        position: absolute;
-    }
+  &__label {
+    text-align: right;
+    padding: 6px;
+  }
+  &__select,
+  &__input {
+    margin: 4px;
+    padding: 6px;
+    box-sizing: border-box;
+  }
+  &__button {
+    color: white;
+    font-size: 2em;
+    background: #ad1457;
+    padding: 0 10px;
+    border: 0;
+    border-radius: 50%;
+    cursor: pointer;
+    bottom: 10px;
+    left: 10px;
+    position: absolute;
+  }
 }
 
 .add-ingredient {
-    &__button {
-        display: block;
-        margin-left: auto;
-        color: white;
-        font-size: 12px;
-        background: #ad1457;
-        padding: 2px 4px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
+  &__button {
+    display: block;
+    margin-left: auto;
+    color: white;
+    font-size: 12px;
+    background: #ad1457;
+    padding: 2px 4px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
 }
 
 .recipe__details {
-    &-container {
-        min-width: 40%;
-    }
+  &-container {
+    min-width: 40%;
+  }
+  &--open {
+    top: 0;
+    right: 0;
+    height: 100%;
+    background: #ad1457;
+    padding: 30px;
+    overflow: auto;
+    box-shadow: -2px -3px 5px rgba(0, 0, 0, 0.3);
+    box-sizing: border-box;
+    color: white;
+    border-radius: 4px;
+  }
+}
+
+.authors-dropdown {
+  &__container {
+    min-width: 20%;
+    position: absolute;
     &--open {
-        top: 0;
-        right: 0;
-        height: 100%;
-        background: #ad1457;
-        padding: 30px;
-        overflow: auto;
-        box-shadow: -2px -3px 5px rgba(0, 0, 0, 0.3);
-        box-sizing: border-box;
-        color: white;
-        border-radius: 4px;
+      top: 0;
+      right: 0;
+      height: 100%;
+      background: #ad1457;
+      padding: 30px;
+      overflow: auto;
+      box-shadow: -2px -3px 5px rgba(0, 0, 0, 0.3);
+      box-sizing: border-box;
+      color: white;
+      border-radius: 4px;
     }
+  }
 }
 
 .container {
-    width: 100%;
-    display: flex;
-    padding-top: 50px;
+  width: 100%;
+  display: flex;
+  padding-top: 50px;
 }
 
 code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
 }
 
 .modal {
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-    border-radius: 6px;
-    background-color: white;
-    padding: 1rem;
-    text-align: center;
-    width: 30rem;
-    z-index: 10;
-    position: fixed;
-    top: 20vh;
-    left: calc(50% - 15rem);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  background-color: white;
+  padding: 1rem;
+  text-align: center;
+  width: 30rem;
+  z-index: 10;
+  position: fixed;
+  top: 20vh;
+  left: calc(50% - 15rem);
 }
 
 .backdrop {
-    position: fixed;
-    z-index: 1;
-    background-color: rgba(0, 0, 0, 0.75);
-    width: 100%;
-    height: 100vh;
-    top: 0;
-    left: 0;
+  position: fixed;
+  z-index: 1;
+  background-color: rgba(0, 0, 0, 0.75);
+  width: 100%;
+  height: 100vh;
+  top: 0;
+  left: 0;
 }
 
 .add-recipe {
-    color: black;
-    &__button {
-        border: none;
-        cursor: pointer;
-        color: inherit;
-        background-color: inherit;
-        font-size: 22px;
-        &--area {
-            display: flex;
-            justify-content: center;
-            margin: 12px;
-            padding: 10px;
-            border-radius: 4px;
-            border: 1px solid #880E4F;
-            box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3);
-            color: white;
-            background-color: #AD1457;
-            position: absolute;
-            bottom: 5%;
-            left: 43%;
-        }
+  color: black;
+  &__button {
+    border: none;
+    cursor: pointer;
+    color: inherit;
+    background-color: inherit;
+    font-size: 22px;
+    &--area {
+      display: flex;
+      justify-content: center;
+      margin: 12px;
+      padding: 10px;
+      border-radius: 4px;
+      border: 1px solid #880e4f;
+      box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3);
+      color: white;
+      background-color: #ad1457;
+      position: absolute;
+      bottom: 5%;
+      left: 43%;
     }
+  }
 }
 
 .visually-hidden {
-    clip: rect(0 0 0 0);
-    clip-path: inset(50%);
-    height: 1px;
-    overflow: hidden;
-    position: absolute;
-    white-space: nowrap;
-    width: 1px;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
 }

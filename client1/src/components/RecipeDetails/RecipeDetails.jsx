@@ -45,7 +45,6 @@ export const RecipeDetails = ({ recipeId }) => {
   const { loading, data, error } = useQuery(getRecipeQuery, {
     variables: { id: userecipeId },
   });
-  //const { loading, data, error } = useQuery(getRecipeByNameQuery, { variables: { name: 'Lasagne'} })
   console.log(data);
 
   return (

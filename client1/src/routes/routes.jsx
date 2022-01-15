@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "../pages/Home/Home";
-import { Login } from "../pages/Login/Login";
 import { SplashPage } from "../pages/SplashHome/SplashPage";
 import Page404 from "../pages/Error/404";
 import { GlobalContext } from "../context/GlobalState";
@@ -23,7 +22,6 @@ const AppRoutes = () => {
       ))
     : (innerBlock = (
         <AnimatedSwitch>
-          <Route exact path="/login" element={<Login />} />
           <Route exact path="*" element={<SplashPage />} />
         </AnimatedSwitch>
       ));

@@ -31,7 +31,10 @@ export const CustomInput = (props) => {
   const { onInputChange, id } = props;
 
   useEffect(() => {
-    if (inputState.touched) {
+    if (
+      (typeof props.type === "string" && inputState.touched) ||
+      typeof props.type === "number"
+    ) {
       onInputChange(id, inputState.value, inputState.isValid);
     }
   }, [inputState, onInputChange, id]);
@@ -55,7 +58,11 @@ export const CustomInput = (props) => {
     if (props.minLength != null && text.length < props.minLength) {
       isValid = false;
     }
-    dispatch({ type: INPUT_CHANGE, value: text, isValid: isValid });
+    dispatch({
+      type: INPUT_CHANGE,
+      value: props.min ? Number(text) : text,
+      isValid: isValid,
+    });
   };
 
   const lostFocusHandler = () => {
@@ -70,6 +77,7 @@ export const CustomInput = (props) => {
         onChange={(e) => textChangeHandler(e.target.value)}
         onBlur={lostFocusHandler}
         type={props.type}
+        placeholder={props.placeholder}
       />
       {!inputState.isValid && inputState.touched && (
         <div className="error-container">
